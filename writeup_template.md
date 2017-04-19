@@ -32,7 +32,7 @@ You can find the code in the IPython notebook named [Vehicle-Detection.ipynb](ht
 ## Traning data
 I used the data provided by Udacity. Here are links to the labeled data for [vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/vehicles.zip) and [non-vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/non-vehicles.zip) examples to train the classifier. These example images come from a combination of the [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html), the [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/), and examples extracted from the project video itself.
 
-
+The dataset contains in total 17,760 color images of dimension 64×64 px. 8,792 samples contain a vehicles and 8,968 samples do not. The dataset is then balanced.
 
 ## Feature extraction
 
@@ -63,18 +63,64 @@ spatial_size=(16, 16)
 hist_bins=16
 
 ```
+Here the code that extract the features:
+```
 ### Traning phase
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+car_features = extract_features(cars, spatial_size=spatial_size, hist_bins=hist_bins, orient=orient, 
+                        pix_per_cell=pix_per_cell, cell_per_block=cell_per_block, 
+                        hog_channel=hog_channel)
+print ('Extracting not-car features')
+notcar_features = extract_features(notcars, spatial_size=spatial_size, hist_bins=hist_bins, orient=orient, 
+                        pix_per_cell=pix_per_cell, cell_per_block=cell_per_block, 
+                        hog_channel=hog_channel)
 
-I trained a linear SVM using...
 
-###Sliding Window Search
+```
+
+As in any machine learning application, we need to normalize our data. In this case I use the function called  StandardScaler() in thePython's sklearn package.
+
+```
+# Create an array stack of feature vectors
+X = np.vstack((car_features, notcar_features)).astype(np.float64)                        
+# Fit a per-column scaler
+X_scaler = StandardScaler().fit(X)
+# Apply the scaler to X
+scaled_X = X_scaler.transform(X)
+```
+Now we can create the labels vector and shuffle and splitting the data into a training and testing set:
+```
+# Define the labels vector
+y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
+
+# Split up data into randomized training and test sets
+rand_state = np.random.randint(0, 100)
+X_train, X_test, y_train, y_test = train_test_split(
+    scaled_X, y, test_size=0.2, random_state=rand_state)
+
+```
+We are ready to train our classifier!
+
+
+### Traning phase
+
+I trained a linear SVM provide by sklearn.svm. 
+
+```
+# Use a linear SVC 
+svc = LinearSVC()
+# Check the training time for the SVC
+t=time.time()
+svc.fit(X_train, y_train)
+```
+
+It takes 26.57 Seconds to train the classifier. I finally got test accuracy of 99.1%.
+
+
+### Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
-![alt text][image3]
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
