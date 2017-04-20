@@ -1,7 +1,7 @@
 # Vehicle Detection Project
 
 # Introduction
-In this project, the goal is to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. I tried two different solution. The first rely on computer vision and machine learning while the second one rely on convolutional neural network.
+In this project, the goal is to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. I tried two different solutions. The first one rely on computer vision and machine learning tecquine while the second one rely on a deep neural network.
 
 
 # First solution: HOG + SVM
@@ -113,13 +113,16 @@ t=time.time()
 svc.fit(X_train, y_train)
 ```
 
-It takes 26.57 Seconds to train the classifier. I finally got test accuracy of 99.1%.
+It takes 26.57 Seconds to train the classifier. I finally got a test accuracy of 99.1%.
 
 
 ### Sliding Window Search
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
+We have to deal now with images coming from a front-facing camera on a car. We need to extract from these full-resolution images some sub-regions and check if they contains a car or not. To extract subregions of the image I used a sliding window approach. It is important to minimize the number of subregions used in order to improve the performane and avoid looking for cars where we know they cannot be (for example in the sky).
+
+For each subregions we need to compute the feature vector and send to to the classifier, that will predict if there is a car or not in the images.The function find_cars is able to both extract features and make predictions by computing the HOG transform only once. and then can be sub-sampled to get all of its overlaying windows. 
 
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
