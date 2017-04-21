@@ -42,6 +42,37 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 ![alt text][image1]
 
+These are the features I used in this project:
+* Spatial features: a down sampled copy of the image
+* Color histogram features that capture the statistical color information of each image. Cars often have very saturated colors while the background has pale color. This feature could help to indentify the car by the color information.
+* Histogram of oriented gradients (HOG): that capture the gradient structure of each image channel and work well under different lighting conditions
+
+As you can see in the next picture, even reducing the size of the image to 32 x 32 pixel resolution, the car itself is still clearly identifiable, and this means that the relevant features are still preserved. This is the function I used to compute the spatial features, it simply resizes the image and flatten to a 1-D vector:
+
+```
+# Define a function to compute binned color features  
+def bin_spatial(img, size=(32, 32)):
+    # Use cv2.resize().ravel() to create the feature vector
+    features = cv2.resize(img, size).ravel() 
+    # Return the feature vector
+    return features
+```
+
+The second feature I used are the histograms of pixel intensity (color histograms). The function `color_hist` compute the histogram of the color channels seprately and after concatenates them in a 1-D vector.
+
+```
+# Define a function to compute color histogram features  
+def color_hist(img, nbins=32, bins_range=(0, 256)):
+    # Compute the histogram of the color channels separately
+    channel1_hist = np.histogram(img[:,:,0], bins=nbins, range=bins_range)
+    channel2_hist = np.histogram(img[:,:,1], bins=nbins, range=bins_range)
+    channel3_hist = np.histogram(img[:,:,2], bins=nbins, range=bins_range)
+    # Concatenate the histograms into a single feature vector
+    hist_features = np.concatenate((channel1_hist[0], channel2_hist[0], channel3_hist[0]))
+    # Return the individual histograms, bin_centers and feature vector
+    return hist_features
+```
+
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
@@ -120,9 +151,11 @@ It takes 26.57 Seconds to train the classifier. I finally got a test accuracy of
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-We have to deal now with images coming from a front-facing camera on a car. We need to extract from these full-resolution images some sub-regions and check if they contains a car or not. To extract subregions of the image I used a sliding window approach. It is important to minimize the number of subregions used in order to improve the performane and avoid looking for cars where we know they cannot be (for example in the sky).
+We have to deal now with images coming from a front-facing camera on a car. We need to extract from these full-resolution images some sub-regions and check if they contains a car or not. To extract subregions of the image I used a sliding window approach. It is important to minimize the number of subregions used in order to improve the performane and to avoid looking for cars where we know they cannot be (for example on the sky).
 
-For each subregions we need to compute the feature vector and send to to the classifier, that will predict if there is a car or not in the images.The function find_cars is able to both extract features and make predictions by computing the HOG transform only once. and then can be sub-sampled to get all of its overlaying windows. 
+For each subregions we need to compute the feature vector and feed it to the classifier. The classifier, in this case I used a SVM with linear kernel, will predict if there is a car or not in the images.
+
+The function `find_cars` is able to both extract features and make predictions by computing the HOG transform only once for the entire picture. The HOG is then sub-sampled to get all of its overlaying windows. 
 
 
 ####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
