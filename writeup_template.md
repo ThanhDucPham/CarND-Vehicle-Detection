@@ -149,16 +149,12 @@ It takes 26.57 Seconds to train the classifier. I finally got a test accuracy of
 
 ### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
-
 We have to deal now with images coming from a front-facing camera on a car. We need to extract from these full-resolution images some sub-regions and check if they contains a car or not. To extract subregions of the image I used a sliding window approach. It is important to minimize the number of subregions used in order to improve the performane and to avoid looking for cars where we know they cannot be (for example on the sky).
 
 For each subregions we need to compute the feature vector and feed it to the classifier. The classifier, in this case I used a SVM with linear kernel, will predict if there is a car or not in the images.
 
 The function `find_cars` is able to both extract features and make predictions by computing the HOG transform only once for the entire picture. The HOG is then sub-sampled to get all of its overlaying windows. 
 
-
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
@@ -169,6 +165,15 @@ I recorded the positions of positive detections in each frame of the video.  Fro
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
+Here are six frames and their corresponding heatmaps:
+
+![alt text][image5]
+
+Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+![alt text][image6]
+
+Here the resulting bounding boxes are drawn onto the last frame in the series:
+![alt text][image7]
 
 
 ---
@@ -181,11 +186,13 @@ This is the result of the detection:
 
 ---
 
+# Second solution: SSD (Single Shot MultiBox Detector)
+
+In the last year Convolutional Neural Networks demonstrated to be very succesful for object detection. This is way I was cuouris to test a deep learning approach to detect vehicles. 
 
 
 
-
-###Discussion
+# Discussion
 
 
 
