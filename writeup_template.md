@@ -5,8 +5,10 @@ In this project, the goal is to write a software pipeline to identify vehicles i
 * Histogram of Oriented Gradients (HOG) image descriptor and a Linear Support Vector Machine (SVM)
 * SSD (Single Shot MultiBox Detector)
 
-Here an extract of the result (HOG method in blue and SSD in red):
+Here, for the impatient ones, an extract of the results:
+#### HOG + SVM:
 ![](./videos/result_hog_svm.gif)
+#### SSD
 ![](./videos/result_hog_ssd.gif) 
 
 # First solution: HOG + SVM
