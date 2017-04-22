@@ -5,6 +5,12 @@ In this project, the goal is to write a software pipeline to identify vehicles i
 * Histogram of Oriented Gradients (HOG) image descriptor and a Linear Support Vector Machine (SVM)
 * SSD (Single Shot MultiBox Detector)
 
+Here, for the impatient ones, an extract of the results:
+#### HOG + SVM:
+![](./videos/result_hog_svm.gif)
+#### SSD:
+![](./videos/result_hog_ssd.gif) 
+
 # First solution: HOG + SVM
 The steps of this project are the following:
 
@@ -158,17 +164,14 @@ We have to deal now with images coming from a front-facing camera on a car. We n
 
 For each subregion, we need to compute the feature vector and feed it to the classifier. The classifier, a SVM with linear kernel, will predict if there is a car or not in the images.
 
-The function `find_cars` can both extract features and make predictions by computing the HOG transform only once for the entire picture. The HOG is then sub-sampled to get all of its overlaying windows. 
+The function `find_cars` can both extract features and make predictions by computing the HOG transform only once for the entire picture. The HOG is then sub-sampled to get all of its overlaying windows. This function is called three times at different scale: 1, 1.5 and 2. 
 
-
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Here are some example images:
 
 
 ![alt text][image4]
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections, I created a heat map and then thresholded it to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heat map.  I then assumed each blob corresponded to a vehicle. Finally, I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heat map from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of a video:
 
 Here are six frames and their corresponding heat maps:
 
@@ -200,7 +203,7 @@ Finally, I tested the pipeline on a video stream. In this case, I did not consid
 This is the result of the detection:
 
 ![](./videos/result_hog_svm.gif)   
-Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video.
+Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video. The pipeline perform reasonably well on the entire project video. The vehicles are identified of the time with minimal false positives.
 
 ---
 
@@ -217,21 +220,23 @@ Finally, I decided to use SSD that seems to be one of the best methods, taking i
 
 <img src="./examples/SSDvsYOLO.png" width="700" alt="" />     
 
-I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of SSD in Keras (see [here](https://handong1587.github.io/deep_learning/2015/10/09/object-detection.html#ssd) for other implementations), and later I discovered on Facebook that another Udacity student, [antorsae](https://github.com/antorsae) had already tested it (see [here](https://github.com/antorsae/CarND-Vehicle-Detection])). I created a new repository to test the SSD starting from antorsae's script, you can find it here.
+I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of the SSD in Keras (see [here](https://handong1587.github.io/deep_learning/2015/10/09/object-detection.html#ssd) for other implementations), and later I discovered on Facebook that another Udacity student, [antorsae](https://github.com/antorsae) had already tested it (see [here](https://github.com/antorsae/CarND-Vehicle-Detection])). 
 
-This is the result: 
+This is the result that I got with the SSD running on a GTX 1080: 
 
 ![](./videos/result_hog_ssd.gif)   
 Click [here](https://youtu.be/Ycb-1BTaGis) to see the complete video.
 
 
-# Suggestion: Object detection with Deep Learning with Dlib 
-In the Dlib library, we can find an implementation of the max-margin object-detection algorithm (MMOD), that can work with small amounts of training data. Here you can find a description and the code of the method.
+# Object detection with Deep Learning with Dlib 
+In the [Dlib library](http://blog.dlib.net/), we can find an implementation of the [max-margin object-detection algorithm (MMOD)](http://blog.dlib.net/2016/10/easily-create-high-quality-object.html), that can work with small amounts of training data. Here you can find a description and the code of the method.
 
-I plan to test it is after the submission and to update this section with the result.
+I plan to test this approach after the submission and to update this section with the result.
 
 
 # Discussion
-The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames for a second). Even if it could be optimized in  C++ and parallelizing the search with the sliding windows, probably a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it is not a fair comparison since that the SSD is using the GPU.
+The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames per second). Even if it could be optimized in  C++ and by parallelizing the search with the sliding windows, probably a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it has to be said that this is not a fair comparison since that the SSD is using the GPU.
 
 It would be useful also to use a tracking algorithm when the detection fails (if the detection is fast enough). It would worth a try [Open TDL](http://kahlan.eps.surrey.ac.uk/featurespace/tld/Publications/2011_tpami) or the [correlation_tracker](http://blog.dlib.net/2015/02/dlib-1813-released.html) from the dlib C++ library.
+
+To reduce the false positive for the HOG+SVM solution, it would also be useful to apply hard-negative mining: take the falsely detected patch, add them to the training set with a negative label, and train again the classifier.
