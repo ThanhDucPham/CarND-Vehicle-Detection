@@ -184,12 +184,12 @@ Here the resulting bounding boxes are drawn onto the last frame in the series:
 
 Now let's test the pipeline with some images (you can find the original in the folder output_images):
 
-<img src="./output_images/test_1.png" width="500" alt="" />   
-<img src="./output_images/test_2.png" width="500" alt="" />   
-<img src="./output_images/test_3.png" width="500" alt="" />   
-<img src="./output_images/test_4.png" width="500" alt="" />   
-<img src="./output_images/test_5.png" width="500" alt="" />   
-<img src="./output_images/test_6.png" width="500" alt="" />   
+<img src="./output_images/test_1.png" width="600" alt="" />   
+<img src="./output_images/test_2.png" width="600" alt="" />   
+<img src="./output_images/test_3.png" width="600" alt="" />   
+<img src="./output_images/test_4.png" width="600" alt="" />   
+<img src="./output_images/test_5.png" width="600" alt="" />   
+<img src="./output_images/test_6.png" width="600" alt="" />   
 
 
 ### Video Implementation
@@ -202,11 +202,31 @@ This is the result of the detection:
 
 # Second solution: SSD (Single Shot MultiBox Detector)
 
-In the last years Convolutional Neural Networks demonstrated to be very successful for object detection. This is way I was curious to test a deep learning approach to detect vehicles. 
+In the last years Convolutional Neural Networks demonstrated to be very successful for object detection. This is way I was curious to test a deep learning approach to detect vehicles. [Here](http://www.cs.toronto.edu/~urtasun/courses/CSC2541_Winter17/detection.pdf) you can find a nice presentation showing the object detection state-of-the-art.
 
+Here a graph showing the result of the Pascal VOC Challenge in the past years (Slide credit: [Renjie Liao](http://www.cs.toronto.edu/~urtasun/courses/CSC2541/05_2D_detection.pdf)):
+
+<img src="./examples/detection_CNN.png" width="800" alt="" />    
+
+Finally, I decided to use SSD that seems to be one of the best method, taking into account speed and accuracy (Slide credit: Wei Liu):
+
+
+<img src="./examples/SSDvsYOLO.png" width="800" alt="" />     
+
+I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of SSD in Keras, and later I discovered on Facebook that another Udacity student, (antorsae)[https://github.com/antorsae] had already tested it (see (here)[https://github.com/antorsae/CarND-Vehicle-Detection]). I created a new repository to test the SSD starting from antorsae's script, you can find it here.
+
+This is the result: 
+
+
+# Suggestion: Object detection with Deep Learning with Dlib 
+
+In the Dlib library we can find an implementation of the max-margin object-detection algorithm (MMOD), that can work with small amounts of training data. Here you can find a description and the code of the the method.
+
+I plan to test it is after the submission and update this section with the results.
 
 
 # Discussion
+The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames for second). Even if it could be optimized in  C++ and parallelizing the search with the sliding windows, probabily a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it is not a fair comparison since that the SSD is using the GPU.
 
 
 
