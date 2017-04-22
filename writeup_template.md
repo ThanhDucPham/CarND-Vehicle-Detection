@@ -165,7 +165,6 @@ Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spat
 
 ![alt text][image4]
 
-
 I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
@@ -180,12 +179,22 @@ Here is the output of `scipy.ndimage.measurements.label()` on the integrated hea
 Here the resulting bounding boxes are drawn onto the last frame in the series:
 ![alt text][image7]
 
-
 ---
+### Test on images
+
+Now let's test the pipeline with some images (you can find the original in the folder output_images):
+
+<img src="./output_images/test_1.png" width="500" alt="" />   
+<img src="./output_images/test_2.png" width="500" alt="" />   
+<img src="./output_images/test_3.png" width="500" alt="" />   
+<img src="./output_images/test_4.png" width="500" alt="" />   
+<img src="./output_images/test_5.png" width="500" alt="" />   
+<img src="./output_images/test_6.png" width="500" alt="" />   
+
 
 ### Video Implementation
 
-Finally I tested the pipeline on a video stream. In this case I did not consider each frame individually, in fact we can take advantage of the previous past detections. A dequeue collection type is used to accumulate the detection of the last N frames, in this way is easier to eliminate false positive. The only difference is that the threshold for the heat map will be higher.
+Finally I tested the pipeline on a video stream. In this case I did not consider each frame individually, in fact, we can take advantage of the previous past detections. A dequeue collection type is used to accumulate the detection of the last N frames, in this way is easier to eliminate false positive. The only difference is that the threshold for the heat map will be higher.
 
 This is the result of the detection:
 
@@ -193,7 +202,7 @@ This is the result of the detection:
 
 # Second solution: SSD (Single Shot MultiBox Detector)
 
-In the last year Convolutional Neural Networks demonstrated to be very successful for object detection. This is way I was curious to test a deep learning approach to detect vehicles. 
+In the last years Convolutional Neural Networks demonstrated to be very successful for object detection. This is way I was curious to test a deep learning approach to detect vehicles. 
 
 
 
