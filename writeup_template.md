@@ -8,7 +8,7 @@ In this project, the goal is to write a software pipeline to identify vehicles i
 Here, for the impatient ones, an extract of the results:
 #### HOG + SVM:
 ![](./videos/result_hog_svm.gif)
-#### SSD
+#### SSD:
 ![](./videos/result_hog_ssd.gif) 
 
 # First solution: HOG + SVM
