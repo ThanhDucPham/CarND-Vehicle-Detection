@@ -199,6 +199,10 @@ Finally, I tested the pipeline on a video stream. In this case, I did not consid
 
 This is the result of the detection:
 
+![https://youtu.be/ofQsCMhvjLg](./output_images/result_hog_svm.gif) 
+
+Click on the gif to see the complete video.
+
 ---
 
 # Second solution: SSD (Single Shot MultiBox Detector)
@@ -207,12 +211,12 @@ In the last years, Convolutional Neural Networks demonstrated to be very success
 
 Here a graph showing the result of the Pascal VOC Challenge in the past years (Slide credit: [Renjie Liao](http://www.cs.toronto.edu/~urtasun/courses/CSC2541/05_2D_detection.pdf)):
 
-<img src="./examples/detection_CNN.png" width="800" alt="" />    
+<img src="./examples/detection_CNN.png" width="700" alt="" />    
 
 Finally, I decided to use SSD that seems to be one of the best methods, taking into account speed and accuracy (Slide credit: Wei Liu):
 
 
-<img src="./examples/SSDvsYOLO.png" width="800" alt="" />     
+<img src="./examples/SSDvsYOLO.png" width="700" alt="" />     
 
 I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of SSD in Keras, and later I discovered on Facebook that another Udacity student, (antorsae)[https://github.com/antorsae] had already tested it (see (here)[https://github.com/antorsae/CarND-Vehicle-Detection]). I created a new repository to test the SSD starting from antorsae's script, you can find it here.
 
@@ -228,4 +232,4 @@ I plan to test it is after the submission and to update this section with the re
 # Discussion
 The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames for a second). Even if it could be optimized in  C++ and parallelizing the search with the sliding windows, probably a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it is not a fair comparison since that the SSD is using the GPU.
 
-It would be useful also to use a tracking algorithm when the detection fails (if the detection is fast enough). It would worth a try (Open TDL)[http://kahlan.eps.surrey.ac.uk/featurespace/tld/Publications/2011_tpami] or the (correlation_tracker)[http://blog.dlib.net/2015/02/dlib-1813-released.html] from the dlib C++ library.
+It would be useful also to use a tracking algorithm when the detection fails (if the detection is fast enough). It would worth a try [Open TDL](http://kahlan.eps.surrey.ac.uk/featurespace/tld/Publications/2011_tpami) or the [correlation_tracker](http://blog.dlib.net/2015/02/dlib-1813-released.html) from the dlib C++ library.
