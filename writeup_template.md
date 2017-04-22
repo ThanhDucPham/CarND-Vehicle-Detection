@@ -9,8 +9,9 @@ In this project, the goal is to write a software pipeline to identify vehicles i
 
 The steps of this project are the following:
 
+* Get the training data: we need images representing a car (positive samples) and images that does (negative samples).
 * Feature extraction (for each sample of the training set):
-  * Perform a Histogram of Oriented Gradients (HOG) feature extraction.
+  * Perform a [Histogram of Oriented Gradients (HOG)](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf) feature extraction.
   * Extract binned color features, as well as histograms of color.
   * Concatenate the previous results in a vector and normalize
 * Train a Linear SVM classifier
@@ -79,7 +80,7 @@ I then explored different color spaces and different `skimage.hog()` parameters 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 
-![alt text][image2]
+<img src="./examples/dist_class_training.png" width="500" alt="Distribution Class Training" />
 
 I tried various combinations of parameters and these are the paramenters that gaves me the best result:
 
