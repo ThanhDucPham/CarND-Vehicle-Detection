@@ -162,17 +162,14 @@ We have to deal now with images coming from a front-facing camera on a car. We n
 
 For each subregion, we need to compute the feature vector and feed it to the classifier. The classifier, a SVM with linear kernel, will predict if there is a car or not in the images.
 
-The function `find_cars` can both extract features and make predictions by computing the HOG transform only once for the entire picture. The HOG is then sub-sampled to get all of its overlaying windows. 
+The function `find_cars` can both extract features and make predictions by computing the HOG transform only once for the entire picture. The HOG is then sub-sampled to get all of its overlaying windows. This function is called three times at different scale: 1, 1.5 and 2. 
 
-
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Here are some example images:
 
 
 ![alt text][image4]
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections, I created a heat map and then thresholded it to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heat map.  I then assumed each blob corresponded to a vehicle. Finally, I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heat map from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of a video:
 
 Here are six frames and their corresponding heat maps:
 
