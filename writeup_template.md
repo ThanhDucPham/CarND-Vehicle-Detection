@@ -46,7 +46,7 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 These are the features I used in this project:
 * Spatial features: a down sampled copy of the image
-* Color histogram features that capture the statistical color information of each image. Cars often have very saturated colors while the background has pale color. This feature could help to indentify the car by the color information.
+* Color histogram features that capture the statistical color information of each image. Cars often have very saturated colors while the background has pale color. This feature could help to identify the car by the color information.
 * Histogram of oriented gradients (HOG): that capture the gradient structure of each image channel and work well under different lighting conditions
 
 As you can see in the next picture, even reducing the size of the image to 32 x 32 pixel resolution, the car itself is still clearly identifiable, and this means that the relevant features are still preserved. This is the function I used to compute the spatial features, it simply resizes the image and flatten to a 1-D vector:
@@ -60,7 +60,7 @@ def bin_spatial(img, size=(32, 32)):
     return features
 ```
 
-The second feature I used are the histograms of pixel intensity (color histograms). The function `color_hist` compute the histogram of the color channels seprately and after concatenates them in a 1-D vector.
+The second feature I used are the histograms of pixel intensity (color histograms). The function `color_hist` compute the histogram of the color channels separately and after concatenates them in a 1-D vector.
 
 ```
 # Define a function to compute color histogram features  
@@ -77,12 +77,15 @@ def color_hist(img, nbins=32, bins_range=(0, 256)):
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YCrCb` color space and HOG parameters of `orientations=12`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 
-<img src="./examples/dist_class_training.png" width="500" alt="Distribution Class Training" />
+<img src="./examples/YCrCb_example.png" width="500" alt="" />   
+<img src="./examples/HOG_example.png" width="500" alt="" />   
 
-I tried various combinations of parameters and these are the paramenters that gaves me the best result:
+
+
+I tried various combinations of parameters and these are the parameters that gave me the best result:
 
 ```
 # HOG parameters
@@ -182,7 +185,7 @@ Here the resulting bounding boxes are drawn onto the last frame in the series:
 
 ### Video Implementation
 
-Finally I tested the pipeline on a video stream. In this case I did not consider each frame individually, in fact we can take advantage of the previous past detections. A deque colletion type is usied to accumulate the detection of the last N frames, in this way is easier to eliminate false positive. The only difference is that the threshold for the heat map will be higher.
+Finally I tested the pipeline on a video stream. In this case I did not consider each frame individually, in fact we can take advantage of the previous past detections. A dequeue collection type is used to accumulate the detection of the last N frames, in this way is easier to eliminate false positive. The only difference is that the threshold for the heat map will be higher.
 
 This is the result of the detection:
 
@@ -190,7 +193,7 @@ This is the result of the detection:
 
 # Second solution: SSD (Single Shot MultiBox Detector)
 
-In the last year Convolutional Neural Networks demonstrated to be very succesful for object detection. This is way I was cuouris to test a deep learning approach to detect vehicles. 
+In the last year Convolutional Neural Networks demonstrated to be very successful for object detection. This is way I was curious to test a deep learning approach to detect vehicles. 
 
 
 
