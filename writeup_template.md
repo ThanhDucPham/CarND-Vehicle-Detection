@@ -1,8 +1,9 @@
 # Vehicle Detection Project
 
 # Introduction
-In this project, the goal is to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. I tried two different solutions. The first one rely on computer vision and machine learning tecquine while the second one rely on a deep neural network.
-
+In this project, the goal is to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. I tried two different solutions:
+* Histogram of Oriented Gradients (HOG) image descriptor and a Linear Support Vector Machine (SVM)
+* SSD (Single Shot MultiBox Detector)
 
 # First solution: HOG + SVM
 
@@ -11,7 +12,7 @@ The steps of this project are the following:
 * Feature extraction (for each sample of the training set):
   * Perform a Histogram of Oriented Gradients (HOG) feature extraction.
   * Extract binned color features, as well as histograms of color.
-  * Concatenate the prevoius results in a vector and normalize
+  * Concatenate the previous results in a vector and normalize
 * Train a Linear SVM classifier
 * Implement a sliding-window technique and use the trained classifier to search for vehicles in images.
 * Run your pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
