@@ -231,7 +231,7 @@ Click [here](https://youtu.be/Ycb-1BTaGis) to see the complete video.
 # Object detection with Deep Learning with Dlib 
 In the [Dlib library](http://blog.dlib.net/), we can find an implementation of the [max-margin object-detection algorithm (MMOD)](http://blog.dlib.net/2016/10/easily-create-high-quality-object.html), that can work with small amounts of training data. Here you can find a description and the code of the method.
 
-I plan to test it is after the submission and to update this section with the result.
+I plan to test this approach after the submission and to update this section with the result.
 
 
 # Discussion
