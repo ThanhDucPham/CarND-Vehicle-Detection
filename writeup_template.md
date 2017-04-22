@@ -199,7 +199,7 @@ Finally, I tested the pipeline on a video stream. In this case, I did not consid
 
 This is the result of the detection:
 
-![https://youtu.be/ofQsCMhvjLg](./output_images/result_hog_svm.gif) 
+![](./videos/result_hog_svm.gif)[https://youtu.be/ofQsCMhvjLg]
 
 Click on the gif to see the complete video.
 
