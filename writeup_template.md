@@ -221,15 +221,15 @@ Finally, I decided to use SSD that seems to be one of the best methods, taking i
 
 <img src="./examples/SSDvsYOLO.png" width="700" alt="" />     
 
-I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of SSD in Keras (see [here](https://handong1587.github.io/deep_learning/2015/10/09/object-detection.html#ssd) for other implementations), and later I discovered on Facebook that another Udacity student, [antorsae](https://github.com/antorsae) had already tested it (see [here](https://github.com/antorsae/CarND-Vehicle-Detection])). I created a new repository to test the SSD starting from antorsae's script, you can find it here.
+I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of the SSD in Keras (see [here](https://handong1587.github.io/deep_learning/2015/10/09/object-detection.html#ssd) for other implementations), and later I discovered on Facebook that another Udacity student, [antorsae](https://github.com/antorsae) had already tested it (see [here](https://github.com/antorsae/CarND-Vehicle-Detection])). 
 
-This is the result: 
+This is the result that I got with the SSD: 
 
 ![](./videos/result_hog_ssd.gif)   
 Click [here](https://youtu.be/Ycb-1BTaGis) to see the complete video.
 
 
-# Suggestion: Object detection with Deep Learning with Dlib 
+# Object detection with Deep Learning with Dlib 
 In the Dlib library, we can find an implementation of the max-margin object-detection algorithm (MMOD), that can work with small amounts of training data. Here you can find a description and the code of the method.
 
 I plan to test it is after the submission and to update this section with the result.
