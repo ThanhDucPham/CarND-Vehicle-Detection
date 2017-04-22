@@ -1,17 +1,19 @@
 # Vehicle Detection Project
 
 # Introduction
-In this project, the goal is to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. I tried two different solution. The first rely on computer vision and machine learning while the second one rely on convolutional neural network.
-
+In this project, the goal is to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. I tried two different solutions:
+* Histogram of Oriented Gradients (HOG) image descriptor and a Linear Support Vector Machine (SVM)
+* SSD (Single Shot MultiBox Detector)
 
 # First solution: HOG + SVM
 
 The steps of this project are the following:
 
+* Get the training data: we need images representing a car (positive samples) and images that does (negative samples).
 * Feature extraction (for each sample of the training set):
-  * Perform a Histogram of Oriented Gradients (HOG) feature extraction.
+  * Perform a [Histogram of Oriented Gradients (HOG)](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf) feature extraction.
   * Extract binned color features, as well as histograms of color.
-  * Concatenate the prevoius results in a vector and normalize
+  * Concatenate the previous results in a vector and normalize
 * Train a Linear SVM classifier
 * Implement a sliding-window technique and use the trained classifier to search for vehicles in images.
 * Run your pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
@@ -42,14 +44,48 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 ![alt text][image1]
 
+These are the features I used in this project:
+* Spatial features: a down sampled copy of the image
+* Color histogram features that capture the statistical color information of each image. Cars often have very saturated colors while the background has pale color. This feature could help to identify the car by the color information.
+* Histogram of oriented gradients (HOG): that capture the gradient structure of each image channel and work well under different lighting conditions
+
+As you can see in the next picture, even reducing the size of the image to 32 x 32 pixel resolution, the car itself is still clearly identifiable, and this means that the relevant features are still preserved. This is the function I used to compute the spatial features, it simply resizes the image and flatten to a 1-D vector:
+
+```
+# Define a function to compute binned color features  
+def bin_spatial(img, size=(32, 32)):
+    # Use cv2.resize().ravel() to create the feature vector
+    features = cv2.resize(img, size).ravel() 
+    # Return the feature vector
+    return features
+```
+
+The second feature I used are the histograms of pixel intensity (color histograms). The function `color_hist` compute the histogram of the color channels separately and after concatenates them in a 1-D vector.
+
+```
+# Define a function to compute color histogram features  
+def color_hist(img, nbins=32, bins_range=(0, 256)):
+    # Compute the histogram of the color channels separately
+    channel1_hist = np.histogram(img[:,:,0], bins=nbins, range=bins_range)
+    channel2_hist = np.histogram(img[:,:,1], bins=nbins, range=bins_range)
+    channel3_hist = np.histogram(img[:,:,2], bins=nbins, range=bins_range)
+    # Concatenate the histograms into a single feature vector
+    hist_features = np.concatenate((channel1_hist[0], channel2_hist[0], channel3_hist[0]))
+    # Return the individual histograms, bin_centers and feature vector
+    return hist_features
+```
+
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
+Here is an example using the `YCrCb` color space and HOG parameters of `orientations=12`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 
-![alt text][image2]
+<img src="./examples/YCrCb_example.png" width="500" alt="" />   
+<img src="./examples/HOG_example.png" width="500" alt="" />   
 
-I tried various combinations of parameters and these are the paramenters that gaves me the best result:
+
+
+I tried various combinations of parameters and these are the parameters that gave me the best result:
 
 ```
 # HOG parameters
@@ -113,51 +149,55 @@ t=time.time()
 svc.fit(X_train, y_train)
 ```
 
-It takes 26.57 Seconds to train the classifier. I finally got test accuracy of 99.1%.
+It takes 26.57 Seconds to train the classifier. I finally got a test accuracy of 99.1%.
 
 
 ### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+We have to deal now with images coming from a front-facing camera on a car. We need to extract from these full-resolution images some sub-regions and check if they contains a car or not. To extract subregions of the image I used a sliding window approach. It is important to minimize the number of subregions used in order to improve the performane and to avoid looking for cars where we know they cannot be (for example on the sky).
 
+For each subregions we need to compute the feature vector and feed it to the classifier. The classifier, in this case I used a SVM with linear kernel, will predict if there is a car or not in the images.
 
+The function `find_cars` is able to both extract features and make predictions by computing the HOG transform only once for the entire picture. The HOG is then sub-sampled to get all of its overlaying windows. 
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
 
 ![alt text][image4]
----
 
-### Video Implementation
-
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video.mp4)
-
-
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
 
 Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
-### Here are six frames and their corresponding heatmaps:
+Here are six frames and their corresponding heatmaps:
 
 ![alt text][image5]
 
-### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
 ![alt text][image6]
 
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
+Here the resulting bounding boxes are drawn onto the last frame in the series:
 ![alt text][image7]
-
 
 
 ---
 
-###Discussion
+### Video Implementation
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+Finally I tested the pipeline on a video stream. In this case I did not consider each frame individually, in fact we can take advantage of the previous past detections. A dequeue collection type is used to accumulate the detection of the last N frames, in this way is easier to eliminate false positive. The only difference is that the threshold for the heat map will be higher.
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+This is the result of the detection:
+
+---
+
+# Second solution: SSD (Single Shot MultiBox Detector)
+
+In the last year Convolutional Neural Networks demonstrated to be very successful for object detection. This is way I was curious to test a deep learning approach to detect vehicles. 
+
+
+
+# Discussion
+
+
 
