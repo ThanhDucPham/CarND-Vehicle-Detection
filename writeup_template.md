@@ -222,7 +222,7 @@ Finally, I decided to use SSD that seems to be one of the best methods, taking i
 
 I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of the SSD in Keras (see [here](https://handong1587.github.io/deep_learning/2015/10/09/object-detection.html#ssd) for other implementations), and later I discovered on Facebook that another Udacity student, [antorsae](https://github.com/antorsae) had already tested it (see [here](https://github.com/antorsae/CarND-Vehicle-Detection])). 
 
-This is the result that I got with the SSD: 
+This is the result that I got with the SSD running on a GTX 1080: 
 
 ![](./videos/result_hog_ssd.gif)   
 Click [here](https://youtu.be/Ycb-1BTaGis) to see the complete video.
@@ -235,6 +235,6 @@ I plan to test it is after the submission and to update this section with the re
 
 
 # Discussion
-The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames per second). Even if it could be optimized in  C++ and parallelizing the search with the sliding windows, probably a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it is not a fair comparison since that the SSD is using the GPU.
+The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames per second). Even if it could be optimized in  C++ and by parallelizing the search with the sliding windows, probably a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it has to be said that this is not a fair comparison since that the SSD is using the GPU.
 
 It would be useful also to use a tracking algorithm when the detection fails (if the detection is fast enough). It would worth a try [Open TDL](http://kahlan.eps.surrey.ac.uk/featurespace/tld/Publications/2011_tpami) or the [correlation_tracker](http://blog.dlib.net/2015/02/dlib-1813-released.html) from the dlib C++ library.
