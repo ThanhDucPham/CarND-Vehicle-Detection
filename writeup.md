@@ -136,11 +136,12 @@ We are ready to train our classifier!
 
 
 I tried various combinations of parameters, trying to keep the length of the feature vector as small as possible. 
-Practically, I run the SVM classifier a bunch of times trying to change the parameter to get the best accuracy value in the test set. 
-Firstly, I tried using different color spaces, and it turned out that the `YCrCb` colorspace gave the best result. I used the `YCrCb` colorspace to compute all the features. 
-After, I  took care of the HOG parameters. I found out that the parameters `orient`, `pix_per_cell`, `cell_per_block` did not have a big impact while using all the channels increased the accuracy of 1%. 
+Practically, I run the SVM classifier several times changing the parameters to get the best accuracy value in the test set. 
+Firstly, I tried using different color spaces, and it turned out that the `YCrCb` colorspace gave me the best result. I used the `YCrCb` colorspace to compute all the features, not only the HOG. 
 
-Finally, I decided to use the smallest values for the spatial size and histogram bins without loose accuracy. Tweaking these parameters improved the accuracy from 97% to 99%. These are the parameters that gave me the best result:
+After, I  took care of the HOG parameters. I found out that the parameters `orient`, `pix_per_cell`, `cell_per_block` did not have a big impact, while using all the channels increased the accuracy of 1%. 
+
+Finally, I decided to use the smallest values for the spatial size and histogram bins without loosing in accuracy. Tweaking these parameters improved the accuracy from 97% to 99%. These are the parameters that gave me the best result:
 
 ```
 # HOG parameters
@@ -201,7 +202,7 @@ Here the resulting bounding boxes are drawn onto the last frame in the series:
 ---
 ### Test on images
 
-Now let's test the pipeline with some images. The hardest challenge of the project is to get rid of the false positives. One thing that really helped was a thresholding  of the decision function of the classifier, which helps to ensure high confidence predictions and reduce false positives.
+The hardest challenge of the project is to get rid of the false positives. One thing that really helped was add a threshold  of the decision function of the classifier, which helps to ensure high confidence predictions and reduce false positives. Using the threshold you can ensure that you are only considering high confidence predictions as vehicle detections.
 
 Here is how I computed the prediction value in the function `find_cars`:
 ```
@@ -216,9 +217,9 @@ The other way to reduce the reduce the false positive is to apply a threshold on
 # Apply threshold to help remove false positives
 heat = apply_threshold(heat,1)
 ```
+Since I am calling the function `find_cars` three times, at difference scale, I supposed that I can remove the detection with a small value on the heatmap. 
 
-
-You can find the original ones in the folder `test_images`:
+Now let's test the pipeline with some images. You can find the original ones in the folder `test_images`:
 
 <img src="./output_images/test_1.png" width="600" alt="" />   
 <img src="./output_images/test_2.png" width="600" alt="" />   
