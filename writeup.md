@@ -167,6 +167,11 @@ svc.fit(X_train, y_train)
 
 It takes 26.57 Seconds to train the classifier. I finally got a test accuracy of 99.1%.
 
+I tried to use the function [GridSearchCV](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) to look for the best C paramenter, but the accuracy did not improve significatively.
+
+I tested also the [MLPClassifier](http://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html). The accuracy improved a little (99.3%) but the prediction time was slower. Since the performance in accuracy was similar, I decided to use the SVM, that has a faster prediction time.  
+
+
 
 ### Sliding Window Search
 
@@ -196,7 +201,24 @@ Here the resulting bounding boxes are drawn onto the last frame in the series:
 ---
 ### Test on images
 
-Now let's test the pipeline with some images. You can find the original ones in the folder `test_images`:
+Now let's test the pipeline with some images. The hardest challenge of the project is to get rid of the false positives. One thing that really helped was a thresholding  of the decision function of the classifier, which helps to ensure high confidence predictions and reduce false positives.
+
+Here is how I computed the prediction value in the function `find_cars`:
+```
+test_prediction = svc.decision_function(test_features)
+
+```
+
+
+The other way to reduce the reduce the false positive is to apply a treshold on the heatmap:
+
+```
+# Apply threshold to help remove false positives
+heat = apply_threshold(heat,1)
+```
+
+
+You can find the original ones in the folder `test_images`:
 
 <img src="./output_images/test_1.png" width="600" alt="" />   
 <img src="./output_images/test_2.png" width="600" alt="" />   
