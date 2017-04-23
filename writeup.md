@@ -14,14 +14,14 @@ Here, for the impatient ones, an extract of the results:
 # First solution: HOG + SVM
 The steps of this project are the following:
 
-* Get the training data: we need images representing a car (positive samples) and images that do not (negative samples).
+* Get the training data: we need images of cars (positive samples) and images representing something else (negative samples).
 * Feature extraction (for each sample of the training set):
-  * Perform a [Histogram of Oriented Gradients (HOG)](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf) feature extraction.
-  * Extract binned color features, as well as histograms of color.
+  * Perform a [Histogram of Oriented Gradients (HOG)](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf) feature extraction
+  * Extract binned color features, as well as histograms of color
   * Concatenate the previous results in a vector and normalize
-* Train a Linear SVM classifier
+* Train a classifier ( for example, a linear SVM classifier)
 * Implement a sliding-window technique and use the trained classifier to search for vehicles in images.
-* Run your pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
+* Run the pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
 
 You can find the code in the IPython notebook named [Vehicle-Detection.ipynb](https://github.com/jokla/CarND-Vehicle-Detection/blob/master/Vehicle-Detection.ipynb).
@@ -44,11 +44,9 @@ The dataset contains in total 17,760 color images of dimension 64×64 px. 8,792 
 
 ## Feature extraction
 
-The code for this step is contained in the first code cell of the IPython notebook.  
-
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
-![alt text][image1]
+<img src="./examples/car_not_car.png" width="500" alt="" />  
 
 These are the features I used in this project:
 * Spatial features: a down sampled copy of the image
@@ -93,8 +91,6 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 <img src="./examples/YCrCb_example.png" width="500" alt="" />   
 <img src="./examples/HOG_example.png" width="500" alt="" />   
 
-
-
 Here the code that extracts the features:
 ```
 ### Traning phase
@@ -117,7 +113,7 @@ X_scaler = StandardScaler().fit(X)
 # Apply the scaler to X
 scaled_X = X_scaler.transform(X)
 ```
-Now we can create the labels vector and shuffle and split the data into a training and testing set:
+Now we can create the labels vector, shuffle and split the data into a training and testing set:
 ```
 # Define the labels vector
 y = np.hstack((np.ones(len(car_features)), np.zeros(len(notcar_features))))
@@ -136,12 +132,12 @@ We are ready to train our classifier!
 
 
 I tried various combinations of parameters, trying to keep the length of the feature vector as small as possible. 
-Practically, I run the SVM classifier several times changing the parameters to get the best accuracy value in the test set. 
-Firstly, I tried using different color spaces, and it turned out that the `YCrCb` colorspace gave me the best result. I used the `YCrCb` colorspace to compute all the features, not only the HOG. 
+Practically, I run the SVM classifier several times changing the parameters to get the best accuracy value for the test set. 
+Firstly, I tried different color spaces, and it turned out that the `YCrCb` colorspace gave me the best result. I used, therfore, the `YCrCb` colorspace to compute all the features. 
 
 After, I  took care of the HOG parameters. I found out that the parameters `orient`, `pix_per_cell`, `cell_per_block` did not have a big impact, while using all the channels increased the accuracy of 1%. 
 
-Finally, I decided to use the smallest values for the spatial size and histogram bins without loosing in accuracy. Tweaking these parameters improved the accuracy from 97% to 99%. These are the parameters that gave me the best result:
+Finally, I decided to use the smallest values possible for the spatial size and histogram bins without loosing in accuracy. Tweaking the parameters improved the accuracy from 97% to 99%. These are the parameters that gave me the best result:
 
 ```
 # HOG parameters
@@ -202,7 +198,7 @@ Here the resulting bounding boxes are drawn onto the last frame in the series:
 ---
 ### Test on images
 
-The hardest challenge of the project is to get rid of the false positives. One thing that really helped was add a threshold  of the decision function of the classifier, which helps to ensure high confidence predictions and reduce false positives. Using the threshold you can ensure that you are only considering high confidence predictions as vehicle detections.
+The hardest challenge of the project is to get rid of the false positives. One thing that really helped was adding a threshold on the decision function of the classifier, which helps to ensure high confidence predictions. Using the threshold you can ensure that you are only considering high confidence predictions as vehicle detections.
 
 Here is how I computed the prediction value in the function `find_cars`:
 ```
@@ -211,32 +207,32 @@ test_prediction = svc.decision_function(test_features)
 ```
 
 
-The other way to reduce the reduce the false positive is to apply a threshold on the heatmap:
+Another way to reduce the false positive is to apply a threshold on the heatmap:
 
 ```
 # Apply threshold to help remove false positives
 heat = apply_threshold(heat,1)
 ```
-Since I am calling the function `find_cars` three times, at difference scale, I supposed that I can remove the detection with a small value on the heatmap. 
+Since I am calling the function `find_cars` three times, at difference scale, I decided to remove the detections with a small value in the heatmap. 
 
 Now let's test the pipeline with some images. You can find the original ones in the folder `test_images`:
 
-<img src="./output_images/test_1.png" width="600" alt="" />   
-<img src="./output_images/test_2.png" width="600" alt="" />   
-<img src="./output_images/test_3.png" width="600" alt="" />   
-<img src="./output_images/test_4.png" width="600" alt="" />   
-<img src="./output_images/test_5.png" width="600" alt="" />   
-<img src="./output_images/test_6.png" width="600" alt="" />   
+<img src="./output_images/test_1.png" width="700" alt="" />   
+<img src="./output_images/test_2.png" width="700" alt="" />   
+<img src="./output_images/test_3.png" width="700" alt="" />   
+<img src="./output_images/test_4.png" width="700" alt="" />   
+<img src="./output_images/test_5.png" width="700" alt="" />   
+<img src="./output_images/test_6.png" width="700" alt="" />   
 
 
 ### Video Implementation
 
-Finally, I tested the pipeline on a video stream. In this case, I did not consider each frame individually, in fact, we can take advantage of the previous past detections. A deque collection type is used to accumulate the detection of the last N frames, in this way is easier to eliminate false positive. The only difference is that the threshold for the heat map will be higher.
+Finally, I tested the pipeline on a video stream. In this case, I did not consider each frame individually, in fact, we can take advantage of the previous detections. A deque collection is used to accumulate the detections of the last N frames, allowing to eliminate false positives. The only difference is that the threshold for the heat map is higher. 
 
 This is the result of the detection:
 
 ![](./videos/result_hog_svm.gif)   
-Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video. The pipeline performs reasonably well on the entire project video. The vehicles are identified of the time with minimal false positives.
+Click [here](https://youtu.be/yEB0MM7yQbQ) to see the complete video. The pipeline performs reasonably well on the entire project video. The vehicles are identified most of the time with no false positives.
 
 ---
 
@@ -268,7 +264,7 @@ I plan to test this approach after the submission and to update this section wit
 
 
 # Discussion
-The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames per second). Even if it could be optimized in  C++ and by parallelizing the search with the sliding windows, probably a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it has to be said that this is not a fair comparison since that the SSD is using the GPU.
+The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames per second). Even if it could be optimized in  C++ and by parallelizing the search on different scales, a deep learning approach would be probably better for real word applications. The detectors based on CNN are faster, more accurate and more robust. However, it has to be said that this is not a fair comparison since that the SSD is using the GPU.
 
 It would be useful also to use a tracking algorithm when the detection fails (if the detection is fast enough). It would worth a try [Open TDL](http://kahlan.eps.surrey.ac.uk/featurespace/tld/Publications/2011_tpami) or the [correlation_tracker](http://blog.dlib.net/2015/02/dlib-1813-released.html) from the dlib C++ library.
 
