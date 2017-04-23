@@ -48,7 +48,7 @@ The code for this step is contained in the first code cell of the IPython notebo
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
-![alt text][image1]
+<img src="./examples/car_not_car.png" width="500" alt="" />  
 
 These are the features I used in this project:
 * Spatial features: a down sampled copy of the image
@@ -92,8 +92,6 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 
 <img src="./examples/YCrCb_example.png" width="500" alt="" />   
 <img src="./examples/HOG_example.png" width="500" alt="" />   
-
-
 
 Here the code that extracts the features:
 ```
