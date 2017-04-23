@@ -55,7 +55,11 @@ These are the features I used in this project:
 * Color histogram features that capture the statistical color information of each image. Cars often have very saturated colors while the background has a pale color. This feature could help to identify the car by the color information.
 * Histogram of oriented gradients (HOG): that capture the gradient structure of each image channel and work well under different lighting conditions
 
-As you can see in the next picture, even reducing the size of the image to 32 x 32 pixel resolution, the car itself is still clearly identifiable, and this means that the relevant features are still preserved. This is the function I used to compute the spatial features, it simply resizes the image and flatten to a 1-D vector:
+As you can see in the next picture, even reducing the size of the image to 32 x 32 pixel resolution, the car itself is still clearly identifiable, and this means that the relevant features are still preserved.
+
+<img src="./examples/spatial-binning.jpg" width="600" alt="" />   
+
+This is the function I used to compute the spatial features, it simply resizes the image and flatten to a 1-D vector:
 
 ```
 # Define a function to compute binned color features  
@@ -91,20 +95,6 @@ Here is an example using the `YCrCb` color space and HOG parameters of `orientat
 
 
 
-I tried various combinations of parameters and these are the parameters that gave me the best result:
-
-```
-# HOG parameters
-orient = 12
-pix_per_cell = 8
-cell_per_block = 2
-hog_channel = "ALL" # Use all channels
-
-# Spatial size and histogram parameters
-spatial_size=(16, 16)
-hist_bins=16
-
-```
 Here the code that extracts the features:
 ```
 ### Traning phase
@@ -115,8 +105,6 @@ print ('Extracting not-car features')
 notcar_features = extract_features(notcars, spatial_size=spatial_size, hist_bins=hist_bins, orient=orient, 
                         pix_per_cell=pix_per_cell, cell_per_block=cell_per_block, 
                         hog_channel=hog_channel)
-
-
 ```
 
 As in any machine learning application, we need to normalize our data. In this case, I use the function called  StandardScaler() in thePython's sklearn package.
@@ -140,12 +128,34 @@ X_train, X_test, y_train, y_test = train_test_split(
     scaled_X, y, test_size=0.2, random_state=rand_state)
 
 ```
+
 We are ready to train our classifier!
 
 
 ### Traning phase
 
-I trained a linear SVM provide by sklearn.svm: 
+
+I tried various combinations of parameters, trying to keep the length of the feature vector as small as possible. 
+Practically, I run the SVM classifier a bunch of times trying to change the parameter to get the best accuracy value in the test set. 
+Firstly, I tried using different color spaces, and it turned out that the `YCrCb` colorspace gave the best result. I used the `YCrCb` colorspace to compute all the features. 
+After, I  took care of the HOG parameters. I found out that the parameters `orient`, `pix_per_cell`, `cell_per_block` did not have a big impact while using all the channels increased the accuracy of 1%. 
+
+Finally, I decided to use the smallest values for the spatial size and histogram bins without loose accuracy. Tweaking these parameters improved the accuracy from 97% to 99%. These are the parameters that gave me the best result:
+
+```
+# HOG parameters
+orient = 12
+pix_per_cell = 8
+cell_per_block = 2
+hog_channel = "ALL" # Use all channels
+
+# Spatial size and histogram parameters
+spatial_size=(16, 16)
+hist_bins=16
+```
+
+
+I trained a linear SVM provide by sklearn.svm with default settings: 
 
 ```
 # Use a linear SVC 
