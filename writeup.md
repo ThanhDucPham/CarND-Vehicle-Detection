@@ -207,7 +207,7 @@ test_prediction = svc.decision_function(test_features)
 ```
 
 
-The other way to reduce the false positive is to apply a threshold on the heatmap:
+Another way to reduce the false positive is to apply a threshold on the heatmap:
 
 ```
 # Apply threshold to help remove false positives
@@ -217,12 +217,12 @@ Since I am calling the function `find_cars` three times, at difference scale, I 
 
 Now let's test the pipeline with some images. You can find the original ones in the folder `test_images`:
 
-<img src="./output_images/test_1.png" width="600" alt="" />   
-<img src="./output_images/test_2.png" width="600" alt="" />   
-<img src="./output_images/test_3.png" width="600" alt="" />   
-<img src="./output_images/test_4.png" width="600" alt="" />   
-<img src="./output_images/test_5.png" width="600" alt="" />   
-<img src="./output_images/test_6.png" width="600" alt="" />   
+<img src="./output_images/test_1.png" width="700" alt="" />   
+<img src="./output_images/test_2.png" width="700" alt="" />   
+<img src="./output_images/test_3.png" width="700" alt="" />   
+<img src="./output_images/test_4.png" width="700" alt="" />   
+<img src="./output_images/test_5.png" width="700" alt="" />   
+<img src="./output_images/test_6.png" width="700" alt="" />   
 
 
 ### Video Implementation
@@ -264,7 +264,7 @@ I plan to test this approach after the submission and to update this section wit
 
 
 # Discussion
-The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames per second). Even if it could be optimized in  C++ and by parallelizing the search with the sliding windows, probably a deep learning approach would be better for real word applications. The detector based on CNN are faster, more accurate and more robust. However, it has to be said that this is not a fair comparison since that the SSD is using the GPU.
+The current implementation using the HOG and the SVM classifier works quite well for the tested images and videos, but it turned out to be very slow (few frames per second). Even if it could be optimized in  C++ and by parallelizing the search on different scales, a deep learning approach would be probably better for real word applications. The detectors based on CNN are faster, more accurate and more robust. However, it has to be said that this is not a fair comparison since that the SSD is using the GPU.
 
 It would be useful also to use a tracking algorithm when the detection fails (if the detection is fast enough). It would worth a try [Open TDL](http://kahlan.eps.surrey.ac.uk/featurespace/tld/Publications/2011_tpami) or the [correlation_tracker](http://blog.dlib.net/2015/02/dlib-1813-released.html) from the dlib C++ library.
 
