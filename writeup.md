@@ -232,7 +232,7 @@ Finally, I tested the pipeline on a video stream. In this case, I did not consid
 This is the result of the detection:
 
 ![](./videos/result_hog_svm.gif)   
-Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video. The pipeline performs reasonably well on the entire project video. The vehicles are identified most of the time with no false positives.
+Click [here](https://youtu.be/yEB0MM7yQbQ) to see the complete video. The pipeline performs reasonably well on the entire project video. The vehicles are identified most of the time with no false positives.
 
 ---
 
