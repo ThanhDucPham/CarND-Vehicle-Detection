@@ -132,7 +132,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 We are ready to train our classifier!
 
 
-### Traning phase
+### Training phase
 
 
 I tried various combinations of parameters, trying to keep the length of the feature vector as small as possible. 
@@ -167,9 +167,9 @@ svc.fit(X_train, y_train)
 
 It takes 26.57 Seconds to train the classifier. I finally got a test accuracy of 99.1%.
 
-I tried to use the function [GridSearchCV](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) to look for the best C paramenter, but the accuracy did not improve significatively.
+I tried to use the function [GridSearchCV](http://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) to look for the best C parameter, but the accuracy did not improve much.
 
-I tested also the [MLPClassifier](http://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html). The accuracy improved a little (99.3%) but the prediction time was slower. Since the performance in accuracy was similar, I decided to use the SVM, that has a faster prediction time.  
+I also tested the [MLPClassifier](http://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html). The accuracy improved a little (99.3%) but the prediction time was slower. Since the performance in accuracy was similar, I decided to use the SVM, that has a faster prediction time.  
 
 
 
@@ -210,7 +210,7 @@ test_prediction = svc.decision_function(test_features)
 ```
 
 
-The other way to reduce the reduce the false positive is to apply a treshold on the heatmap:
+The other way to reduce the reduce the false positive is to apply a threshold on the heatmap:
 
 ```
 # Apply threshold to help remove false positives
@@ -235,7 +235,7 @@ Finally, I tested the pipeline on a video stream. In this case, I did not consid
 This is the result of the detection:
 
 ![](./videos/result_hog_svm.gif)   
-Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video. The pipeline perform reasonably well on the entire project video. The vehicles are identified of the time with minimal false positives.
+Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video. The pipeline performs reasonably well on the entire project video. The vehicles are identified of the time with minimal false positives.
 
 ---
 
