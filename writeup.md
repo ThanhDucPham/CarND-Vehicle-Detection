@@ -14,14 +14,14 @@ Here, for the impatient ones, an extract of the results:
 # First solution: HOG + SVM
 The steps of this project are the following:
 
-* Get the training data: we need images representing a car (positive samples) and images that do not (negative samples).
+* Get the training data: we need images of cars (positive samples) and images representing something else (negative samples).
 * Feature extraction (for each sample of the training set):
-  * Perform a [Histogram of Oriented Gradients (HOG)](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf) feature extraction.
-  * Extract binned color features, as well as histograms of color.
+  * Perform a [Histogram of Oriented Gradients (HOG)](http://lear.inrialpes.fr/people/triggs/pubs/Dalal-cvpr05.pdf) feature extraction
+  * Extract binned color features, as well as histograms of color
   * Concatenate the previous results in a vector and normalize
-* Train a Linear SVM classifier
+* Train a classifier ( for example, a linear SVM classifier)
 * Implement a sliding-window technique and use the trained classifier to search for vehicles in images.
-* Run your pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
+* Run the pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
 
 You can find the code in the IPython notebook named [Vehicle-Detection.ipynb](https://github.com/jokla/CarND-Vehicle-Detection/blob/master/Vehicle-Detection.ipynb).
@@ -43,8 +43,6 @@ I used the data provided by Udacity. Here are links to the labeled data for [veh
 The dataset contains in total 17,760 color images of dimension 64×64 px. 8,792 samples contain a vehicle and 8,968 samples do not. 
 
 ## Feature extraction
-
-The code for this step is contained in the first code cell of the IPython notebook.  
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
