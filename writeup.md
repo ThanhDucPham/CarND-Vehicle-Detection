@@ -211,7 +211,7 @@ test_prediction = svc.decision_function(test_features)
 ```
 
 
-The other way to reduce the reduce the false positive is to apply a threshold on the heatmap:
+The other way to reduce the false positive is to apply a threshold on the heatmap:
 
 ```
 # Apply threshold to help remove false positives
@@ -231,12 +231,12 @@ Now let's test the pipeline with some images. You can find the original ones in 
 
 ### Video Implementation
 
-Finally, I tested the pipeline on a video stream. In this case, I did not consider each frame individually, in fact, we can take advantage of the previous past detections. A deque collection type is used to accumulate the detection of the last N frames, in this way is easier to eliminate false positive. The only difference is that the threshold for the heat map will be higher.
+Finally, I tested the pipeline on a video stream. In this case, I did not consider each frame individually, in fact, we can take advantage of the previous detections. A deque collection is used to accumulate the detections of the last N frames, allowing to eliminate false positives. The only difference is that the threshold for the heat map is higher. 
 
 This is the result of the detection:
 
 ![](./videos/result_hog_svm.gif)   
-Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video. The pipeline performs reasonably well on the entire project video. The vehicles are identified of the time with minimal false positives.
+Click [here](https://youtu.be/ofQsCMhvjLg) to see the complete video. The pipeline performs reasonably well on the entire project video. The vehicles are identified most of the time with no false positives.
 
 ---
 
