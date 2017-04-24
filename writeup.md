@@ -131,13 +131,12 @@ We are ready to train our classifier!
 ### Training phase
 
 
-I tried various combinations of parameters, trying to keep the length of the feature vector as small as possible. 
-Practically, I run the SVM classifier several times changing the parameters to get the best accuracy value for the test set. 
-Firstly, I tried different color spaces, and it turned out that the `YCrCb` colorspace gave me the best result. I used, therfore, the `YCrCb` colorspace to compute all the features. 
+I tried various combinations of parameters, trying to keep the length of the feature vector as small as possible. Practically, I run the SVM classifier several times changing the parameters to get the best accuracy value for the test set. Firstly, I tried different color spaces, and it turned out that the YCrCb color space gave me the best result. I used, therefore, the YCrCb color space to compute all the features.
 
-After, I  took care of the HOG parameters. I found out that the parameters `orient`, `pix_per_cell`, `cell_per_block` did not have a big impact, while using all the channels increased the accuracy of 1%. 
+After, I took care of the HOG parameters. I found out that the parameters orient, pix_per_cell, cell_per_block did not have a big impact while using all the channels increased the accuracy of 1%.
 
-Finally, I decided to use the smallest values possible for the spatial size and histogram bins without loosing in accuracy. Tweaking the parameters improved the accuracy from 97% to 99%. These are the parameters that gave me the best result:
+Finally, I decided to use the smallest values possible for the spatial size and histogram bins without losing in accuracy. Tweaking the parameters improved the accuracy from 97% to 99%. These are the parameters that gave me the best result:
+
 
 ```
 # HOG parameters
