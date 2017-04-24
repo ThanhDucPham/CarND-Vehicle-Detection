@@ -179,19 +179,25 @@ The function `find_cars` can both extract features and make predictions by compu
 
 Here are some example images:
 
-
+<img src="./examples/sliding_window.jpg" width="700" alt="" />   
 ![alt text][image4]
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections, I created a heat map and then thresholded it to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heat map.  I then assumed each blob corresponded to a vehicle. Finally, I constructed bounding boxes to cover the area of each blob detected.  
 
 Here are six frames and their corresponding heat maps:
 
+<img src="./examples/bboxes_and_heat.png" width="700" alt="" />
+
 ![alt text][image5]
 
 Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
+<img src="./examples/labels_map.png" width="700" alt="" />
+
 ![alt text][image6]
 
 Here the resulting bounding boxes are drawn onto the last frame in the series:
+<img src="./examples/output_bboxes.png" width="700" alt="" />
+
 ![alt text][image7]
 
 ---
