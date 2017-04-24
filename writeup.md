@@ -202,9 +202,8 @@ The hardest challenge of the project is to get rid of the false positives. One t
 Here is how I computed the prediction value in the function `find_cars`:
 ```
 test_prediction = svc.decision_function(test_features)
-
 ```
-
+Finally, I considerd valid only the prediciton with a confidence value bigger than 0.4. 
 
 Another way to reduce the false positive is to apply a threshold on the heatmap:
 
