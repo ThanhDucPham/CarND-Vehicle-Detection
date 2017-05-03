@@ -251,7 +251,7 @@ Finally, I decided to use SSD that seems to be one of the best methods, taking i
 
 <img src="./examples/SSDvsYOLO.png" width="700" alt="" />     
 
-I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of the SSD in Keras (see [here](https://handong1587.github.io/deep_learning/2015/10/09/object-detection.html#ssd) for other implementations), and later I discovered on Facebook that another Udacity student, [antorsae](https://github.com/antorsae) had already tested it (see [here](https://github.com/antorsae/CarND-Vehicle-Detection])). 
+I found in GitHub [this](https://github.com/rykov8/ssd_keras) implementation of the SSD in Keras (see [here](https://handong1587.github.io/deep_learning/2015/10/09/object-detection.html#ssd) for other implementations), and later I discovered on Facebook that another Udacity student, [antorsae](https://github.com/antorsae) had already tested it. 
 
 This is the result that I got with the SSD running on a GTX 1080: 
 
